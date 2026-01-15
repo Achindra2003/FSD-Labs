@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Factorial Web Worker Example</title>
+</head>
+<body>
+  <h2>Factorial Calculator using Web Worker</h2>
+  
+  <label for="inputNumber">Enter a non-negative integer:</label>
+  <input type="number" id="inputNumber" min="0" value="5" />
+  <button id="calculateBtn">Calculate Factorial</button>
+
+  <p>Result: <span id="result">None</span></p>
+
+  <script>
+    
+    const worker = new Worker("worker.js");
+
+    worker.onmessage = function(event) {
+      document.getElementById("result").textContent = event.data;
+      console.log("Result from worker:", event.data);
+    };
+
+    document.getElementById("calculateBtn").addEventListener("click", () => {
+      const input = document.getElementById("inputNumber").value;
+      const number = Number(input);
+      document.getElementById("result").textContent = "Calculating...";
+      worker.postMessage(number);
+    });
+  </script>
+</body>
+</html>
