@@ -1,0 +1,407 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BookSphere - Your World of Books</title>
+
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" integrity="sha512-SnH5WK+bZxgPHs44uWIX+LLJAJ9/2PkPKZ5QiAj6Ta86w+fsb2TkcmfRyVX3pBnMFcV7oQPJkl9QevSCWr3W6A==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    
+    <style>
+        /* Hero Section Background */
+        .hero-section {
+            background-image: url('https://images.unsplash.com/photo-1532012197267-da84d127e765?q=80&w=1974&auto=format&fit=crop');
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+        }
+
+        /* Basic Pseudo-selectors for enhanced UX */
+        .nav-link:hover {
+            transform: translateY(-2px);
+            transition: all 0.2s ease-in-out;
+        }
+
+        input:focus, textarea:focus, select:focus {
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.5); /* Blue glow on focus */
+            border-color: #3B82F6; /* Blue border */
+        }
+    </style>
+</head>
+<body class="bg-slate-50 text-slate-800 font-sans">
+
+    <header class="bg-slate-900 text-white shadow-lg sticky top-0 z-50">
+        <nav class="container mx-auto p-4 flex justify-between items-center max-w-7xl">
+            <a href="#" class="text-2xl font-bold tracking-wider hover:text-cyan-400 transition-colors">
+                <i class="fas fa-book-open mr-2"></i>BookSphere
+            </a>
+            <button id="menu-btn" class="md:hidden focus:outline-none text-2xl">
+                <i class="fas fa-bars"></i>
+            </button>
+            <div id="menu" class="hidden md:flex space-x-6 items-center">
+                <a href="#reviews" class="nav-link hover:text-cyan-400">Reviews</a>
+                <a href="#media" class="nav-link hover:text-cyan-400">Media</a>
+                <a href="#location" class="nav-link hover:text-cyan-400">Find Us</a>
+                <a href="#contact" class="bg-cyan-500 hover:bg-cyan-600 px-4 py-2 rounded-full font-semibold transition-all">Contact</a>
+            </div>
+        </nav>
+    </header>
+
+    <section class="hero-section h-[60vh] flex items-center justify-center text-center text-white">
+        <div class="bg-black bg-opacity-60 p-8 rounded-xl max-w-3xl mx-4">
+            <h1 class="text-4xl md:text-6xl font-extrabold mb-4 drop-shadow-lg">Discover Your Next Favorite Book</h1>
+            <p class="text-lg md:text-xl font-light">Explore reviews, interviews, and find literary treasures from around the world.</p>
+        </div>
+    </section>
+
+    <main class="container mx-auto p-4 md:p-8 max-w-7xl space-y-20">
+
+        <section id="reviews" class="scroll-mt-20">
+            <h2 class="text-3xl font-bold text-center mb-8 border-b-4 border-cyan-500 pb-2 inline-block">Latest Book Reviews</h2>
+            
+            <div class="flex flex-col md:flex-row gap-4 justify-between items-center mb-8 bg-white p-4 rounded-lg shadow-md">
+                <div class="relative w-full md:w-1/2">
+                    <span class="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400"><i class="fas fa-search"></i></span>
+                    <input type="text" id="searchInput" placeholder="Search by title or author..." class="w-full pl-10 pr-4 py-2 border rounded-full focus:outline-none">
+                </div>
+                <div class="relative w-full md:w-auto">
+                    <select id="sortSelect" class="w-full appearance-none bg-white py-2 px-4 border rounded-full focus:outline-none">
+                        <option value="rank">Sort by Rank</option>
+                        <option value="title">Sort by Title (A-Z)</option>
+                        <option value="author">Sort by Author (A-Z)</option>
+                    </select>
+                    <span class="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400"><i class="fas fa-chevron-down"></i></span>
+                </div>
+            </div>
+
+            <div id="loading" class="text-center text-lg hidden">Loading books... <i class="fas fa-spinner fa-spin"></i></div>
+            <div id="bookList" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                </div>
+
+            <div id="pagination-controls" class="flex justify-center items-center gap-4 mt-8">
+                </div>
+        </section>
+
+        <section id="media" class="scroll-mt-20">
+            <h2 class="text-3xl font-bold text-center mb-8 border-b-4 border-cyan-500 pb-2 inline-block">Author Interviews</h2>
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 items-start">
+                <div class="bg-white p-4 rounded-lg shadow-lg">
+                    <h3 class="text-xl font-semibold mb-2"><i class="fas fa-video mr-2 text-cyan-500"></i>Video Interview</h3>
+                    <p class="text-slate-600 mb-4">Watch our exclusive interview with a bestselling author.</p>
+                    <video controls class="w-full rounded-md" preload="metadata">
+                        <source src="sample-video.mp4" type="video/mp4">
+                        <track label="English" kind="subtitles" srclang="en" src="video-subtitles.vtt" default>
+                        Your browser does not support the video tag.
+                    </video>
+                </div>
+                <div class="bg-white p-4 rounded-lg shadow-lg">
+                    <h3 class="text-xl font-semibold mb-2"><i class="fas fa-headphones mr-2 text-cyan-500"></i>Podcast Episode</h3>
+                    <p class="text-slate-600 mb-4">Listen to our latest podcast on the art of storytelling.</p>
+                    <audio controls class="w-full" preload="metadata">
+                        <source src="sample-audio.mp3" type="audio/mpeg">
+                        <track label="English" kind="subtitles" srclang="en"src="audio-subtitles.vtt" default>
+                        Your browser does not support the audio tag.
+                    </audio>
+                </div>
+            </div>
+        </section>
+
+        <section id="location" class="text-center scroll-mt-20">
+            <h2 class="text-3xl font-bold text-center mb-8 border-b-4 border-cyan-500 pb-2 inline-block">Find a Bookstore Near You</h2>
+            <p class="max-w-2xl mx-auto mb-6">Click the button below to allow location access and find participating bookstores in your area.</p>
+            <button id="getLocationBtn" class="bg-cyan-500 text-white font-bold py-3 px-6 rounded-full hover:bg-cyan-600 transition-all shadow-lg">
+                <i class="fas fa-map-marker-alt mr-2"></i>Find My Location
+            </button>
+            <div id="locationOutput" class="mt-6 p-4 bg-white rounded-lg shadow-md min-h-[50px] max-w-3xl mx-auto">
+                Your location will be displayed here...
+            </div>
+        </section>
+
+        <section id="contact" class="scroll-mt-20">
+            <h2 class="text-3xl font-bold text-center mb-8 border-b-4 border-cyan-500 pb-2 inline-block">Get in Touch</h2>
+            <div class="max-w-2xl mx-auto text-center mb-4">
+                 <button id="retrieveDraftBtn" class="text-sm bg-slate-200 text-slate-700 font-semibold py-2 px-4 rounded-full hover:bg-slate-300 transition-all">
+                    <i class="fas fa-undo mr-2"></i>Retrieve Last Draft
+                </button>
+            </div>
+            <form id="contactForm" class="max-w-2xl mx-auto bg-white p-8 rounded-lg shadow-lg space-y-6" novalidate>
+                <div>
+                    <label for="name" class="block text-sm font-medium text-slate-700">Full Name</label>
+                    <input type="text" id="name" name="name" required class="mt-1 block w-full px-3 py-2 border border-slate-300 rounded-md shadow-sm focus:outline-none sm:text-sm">
+                    <span id="name-error" class="text-red-500 text-xs mt-1"></span>
+                </div>
+                <div>
+                    <label for="email" class="block text-sm font-medium text-slate-700">Email Address</label>
+                    <input type="email" id="email" name="email" required class="mt-1 block w-full px-3 py-2 border border-slate-300 rounded-md shadow-sm focus:outline-none sm:text-sm">
+                    <span id="email-error" class="text-red-500 text-xs mt-1"></span>
+                </div>
+                <div>
+                    <label for="message" class="block text-sm font-medium text-slate-700">Message</label>
+                    <textarea id="message" name="message" rows="4" required minlength="10" class="mt-1 block w-full px-3 py-2 border border-slate-300 rounded-md shadow-sm focus:outline-none sm:text-sm"></textarea>
+                    <span id="message-error" class="text-red-500 text-xs mt-1"></span>
+                </div>
+                <div class="text-center">
+                    <button type="submit" class="w-full bg-slate-800 text-white font-bold py-3 px-6 rounded-full hover:bg-slate-900 transition-all shadow-lg">
+                        Submit Message
+                    </button>
+                </div>
+            </form>
+        </section>
+
+    </main>
+
+    <footer class="bg-slate-900 text-slate-300 py-8 mt-20">
+        <div class="container mx-auto text-center max-w-7xl">
+            <div class="flex justify-center space-x-6 mb-4">
+                <a href="#" class="text-2xl hover:text-cyan-400 transition-colors"><i class="fab fa-twitter"></i></a>
+                <a href="#" class="text-2xl hover:text-cyan-400 transition-colors"><i class="fab fa-facebook-f"></i></a>
+                <a href="#" class="text-2xl hover:text-cyan-400 transition-colors"><i class="fab fa-instagram"></i></a>
+                <a href="#" class="text-2xl hover:text-cyan-400 transition-colors"><i class="fab fa-linkedin-in"></i></a>
+            </div>
+            <p>© <span id="currentYear"></span> BookSphere. All Rights Reserved.</p>
+        </div>
+    </footer>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+
+            // --- Mobile Menu Toggle ---
+            const menuBtn = document.getElementById('menu-btn');
+            const menu = document.getElementById('menu');
+            menuBtn.addEventListener('click', () => {
+                menu.classList.toggle('hidden');
+                menu.classList.toggle('absolute');
+                menu.classList.toggle('bg-slate-800');
+                menu.classList.toggle('w-full');
+                menu.classList.toggle('left-0');
+                menu.classList.toggle('top-16');
+                menu.classList.toggle('flex-col');
+                menu.classList.toggle('space-y-4');
+                menu.classList.toggle('py-4');
+            });
+            
+            // --- Set Current Year in Footer ---
+            document.getElementById('currentYear').textContent = new Date().getFullYear();
+
+            // --- Fetch API, Search, Sort & Pagination Logic ---
+            const bookListEl = document.getElementById('bookList');
+            const loadingEl = document.getElementById('loading');
+            const searchInput = document.getElementById('searchInput');
+            const sortSelect = document.getElementById('sortSelect');
+            const paginationControlsEl = document.getElementById('pagination-controls');
+            
+            const API_URL = "https://api.nytimes.com/svc/books/v3/lists/current/hardcover-fiction.json?api-key=QTd4H7HDVpLKhqIqtV42NmAthrt8ub4b";
+            
+            let allBooks = [];
+            let currentBooks = [];
+            let currentPage = 1;
+            const booksPerPage = 6;
+
+            const fetchBooks = async () => {
+                loadingEl.style.display = 'block';
+                bookListEl.innerHTML = '';
+                try {
+                    const response = await fetch(API_URL);
+                    if (!response.ok) throw new Error(`HTTP error! Status: ${response.status}`);
+                    const data = await response.json();
+                    allBooks = data.results.books;
+                    filterAndSortBooks(); // Initial display
+                } catch (error) {
+                    bookListEl.innerHTML = `<p class="text-red-500 text-center col-span-full">Failed to load books. Please try again later. Error: ${error.message}</p>`;
+                } finally {
+                    loadingEl.style.display = 'none';
+                }
+            };
+
+            const displayBooks = () => {
+                bookListEl.innerHTML = '';
+                const startIndex = (currentPage - 1) * booksPerPage;
+                const endIndex = startIndex + booksPerPage;
+                const paginatedBooks = currentBooks.slice(startIndex, endIndex);
+
+                if (paginatedBooks.length === 0 && currentPage === 1) {
+                     bookListEl.innerHTML = `<p class="text-slate-500 text-center col-span-full">No books found matching your criteria.</p>`;
+                     return;
+                }
+                paginatedBooks.forEach(book => {
+                    const bookCard = `
+                        <div class="bg-white rounded-lg shadow-lg overflow-hidden flex flex-col transform hover:-translate-y-2 transition-transform duration-300">
+                            <img src="${book.book_image}" alt="Cover of ${book.title}" class="w-full h-80 object-cover">
+                            <div class="p-6 flex flex-col flex-grow">
+                                <h3 class="text-xl font-bold mb-2">${book.title}</h3>
+                                <p class="text-md text-slate-600 mb-1">by ${book.author}</p>
+                                <p class="text-sm text-slate-500 mb-4">Rank: ${book.rank}</p>
+                                <p class="text-slate-700 text-sm flex-grow">${book.description}</p>
+                                <a href="${book.amazon_product_url}" target="_blank" class="mt-4 bg-cyan-500 text-white font-semibold py-2 px-4 rounded-full text-center hover:bg-cyan-600 transition-colors">
+                                    Buy on Amazon <i class="fas fa-arrow-right ml-2"></i>
+                                </a>
+                            </div>
+                        </div>
+                    `;
+                    bookListEl.innerHTML += bookCard;
+                });
+            };
+
+            const setupPagination = () => {
+                paginationControlsEl.innerHTML = '';
+                const totalPages = Math.ceil(currentBooks.length / booksPerPage);
+
+                if (totalPages <= 1) return;
+
+                const prevButton = document.createElement('button');
+                prevButton.innerHTML = `<i class="fas fa-arrow-left"></i> Previous`;
+                prevButton.className = "bg-slate-800 text-white font-semibold py-2 px-4 rounded-full hover:bg-slate-900 transition-all disabled:bg-slate-400 disabled:cursor-not-allowed";
+                prevButton.disabled = currentPage === 1;
+                prevButton.onclick = () => {
+                    if (currentPage > 1) {
+                        currentPage--;
+                        displayBooks();
+                        setupPagination();
+                    }
+                };
+                
+                const pageInfo = document.createElement('span');
+                pageInfo.textContent = `Page ${currentPage} of ${totalPages}`;
+                pageInfo.className = "font-semibold";
+
+                const nextButton = document.createElement('button');
+                nextButton.innerHTML = `Next <i class="fas fa-arrow-right"></i>`;
+                nextButton.className = "bg-slate-800 text-white font-semibold py-2 px-4 rounded-full hover:bg-slate-900 transition-all disabled:bg-slate-400 disabled:cursor-not-allowed";
+                nextButton.disabled = currentPage === totalPages;
+                nextButton.onclick = () => {
+                    if (currentPage < totalPages) {
+                        currentPage++;
+                        displayBooks();
+                        setupPagination();
+                    }
+                };
+                
+                paginationControlsEl.append(prevButton, pageInfo, nextButton);
+            };
+            
+            const filterAndSortBooks = () => {
+                const searchTerm = searchInput.value.toLowerCase();
+                const sortValue = sortSelect.value;
+                
+                let filteredBooks = allBooks.filter(book => 
+                    book.title.toLowerCase().includes(searchTerm) ||
+                    book.author.toLowerCase().includes(searchTerm)
+                );
+
+                if (sortValue === 'title') {
+                    filteredBooks.sort((a, b) => a.title.localeCompare(b.title));
+                } else if (sortValue === 'author') {
+                    filteredBooks.sort((a, b) => a.author.localeCompare(b.author));
+                } else if (sortValue === 'rank') {
+                    filteredBooks.sort((a, b) => a.rank - b.rank);
+                }
+                
+                currentBooks = filteredBooks;
+                currentPage = 1; // Reset to first page on new filter/sort
+                displayBooks();
+                setupPagination();
+            };
+
+            searchInput.addEventListener('input', filterAndSortBooks);
+            sortSelect.addEventListener('change', filterAndSortBooks);
+            
+            // Initial fetch
+            fetchBooks();
+
+            // --- Geolocation Logic ---
+            const getLocationBtn = document.getElementById('getLocationBtn');
+            const locationOutput = document.getElementById('locationOutput');
+
+            getLocationBtn.addEventListener('click', () => {
+                if (!navigator.geolocation) {
+                    locationOutput.innerHTML = 'Geolocation is not supported by your browser.';
+                    return;
+                }
+                locationOutput.innerHTML = 'Locating... <i class="fas fa-spinner fa-spin"></i>';
+                
+                navigator.geolocation.getCurrentPosition(
+                    (position) => {
+                        const { latitude, longitude } = position.coords;
+                        locationOutput.innerHTML = `
+                            <p class="font-semibold">Location Found!</p>
+                            <p>Latitude: ${latitude.toFixed(4)}, Longitude: ${longitude.toFixed(4)}</p>
+                            <a href="https://maps.google.com/?q=${latitude},${longitude}" target="_blank" class="text-cyan-600 hover:underline mt-2 inline-block">
+                                View on Google Maps <i class="fas fa-external-link-alt ml-1"></i>
+                            </a>`;
+                    },
+                    (error) => {
+                        locationOutput.innerHTML = `Error: ${error.message}. Please ensure location services are enabled.`;
+                    }
+                );
+            });
+
+            // --- Form Validation and Storage Logic ---
+            const contactForm = document.getElementById('contactForm');
+            const retrieveDraftBtn = document.getElementById('retrieveDraftBtn');
+
+            contactForm.addEventListener('submit', (event) => {
+                event.preventDefault();
+                if (validateForm()) {
+                    // Save to localStorage
+                    const formData = {
+                        name: document.getElementById('name').value,
+                        email: document.getElementById('email').value,
+                        message: document.getElementById('message').value
+                    };
+                    localStorage.setItem('contactFormDraft', JSON.stringify(formData));
+                    
+                    // Save to sessionStorage
+                    sessionStorage.setItem('formSubmittedInSession', 'true');
+                    
+                    alert('Thank you! Your message has been submitted and a draft was saved.');
+                    contactForm.reset();
+                }
+            });
+
+            retrieveDraftBtn.addEventListener('click', () => {
+                const draft = localStorage.getItem('contactFormDraft');
+                if (draft) {
+                    const draftData = JSON.parse(draft);
+                    document.getElementById('name').value = draftData.name || '';
+                    document.getElementById('email').value = draftData.email || '';
+                    document.getElementById('message').value = draftData.message || '';
+                    alert('Draft restored from localStorage.');
+                } else {
+                    alert('No saved draft found.');
+                }
+            });
+
+            const validateForm = () => {
+                let isValid = true;
+                const name = document.getElementById('name');
+                const email = document.getElementById('email');
+                const message = document.getElementById('message');
+
+                // Clear previous errors
+                document.getElementById('name-error').textContent = '';
+                document.getElementById('email-error').textContent = '';
+                document.getElementById('message-error').textContent = '';
+
+                if (name.value.trim() === '') {
+                    document.getElementById('name-error').textContent = 'Full Name is required.'; isValid = false;
+                }
+                
+                const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+                if (email.value.trim() === '') {
+                    document.getElementById('email-error').textContent = 'Email is required.'; isValid = false;
+                } else if (!emailPattern.test(email.value)) {
+                    document.getElementById('email-error').textContent = 'Please enter a valid email address.'; isValid = false;
+                }
+
+                if (message.value.trim().length < 10) {
+                    document.getElementById('message-error').textContent = 'Message must be at least 10 characters long.'; isValid = false;
+                }
+                
+                return isValid;
+            };
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mixing async/await with .then/.catch</title>
+    <!-- We'll use Tailwind for basic styling -->
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100">
+
+    <div class="container mx-auto p-8">
+        <h1 class="text-3xl font-bold text-center mb-8">Our Users</h1>
+
+        <div id="user-container" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            <p class="text-gray-500">Loading...</p>
+        </div>
+    </div>
+
+
+    <!-- ============================================ -->
+    <!-- JAVASCRIPT LOGIC: The "Best of Both Worlds"  -->
+    <!-- ============================================ -->
+    <script>
+        const userContainer = document.getElementById('user-container');
+        const apiUrl = 'https://jsonplaceholder.typicode.com/users?_limit=6';
+
+        // --- The async Function (The "Promise Producer") ---
+        // This function's only job is to get the data.
+        // It's clean inside thanks to async/await.
+        // It will return a Promise containing the user data, or a rejected Promise on error.
+        async function fetchUsers() {
+            // Note: We remove the try/catch block here because we want to handle
+            // the error outside the function, using .catch().
+            const response = await fetch(apiUrl);
+            
+            if (!response.ok) {
+                // This 'throw' will cause the Promise returned by fetchUsers() to be REJECTED.
+                throw new Error(`Network response was not ok. Status: ${response.status}`);
+            }
+            
+            const users = await response.json();
+            
+            // This 'return' will cause the Promise returned by fetchUsers() to be FULFILLED
+            // with the 'users' array as its value.
+            return users;
+        }
+
+        // --- Consuming the Promise with .then() and .catch() ---
+
+        // Display a loading message before we start.
+        userContainer.innerHTML = '<p class="text-gray-500">Loading...</p>';
+
+        // Step 1: Call our async function. It immediately returns a pending Promise.
+        fetchUsers()
+            .then(users => {
+                // Step 2: The .then() block runs when the Promise is FULFILLED.
+                // The 'users' parameter is the value that was returned from fetchUsers().
+                
+                console.log('Success! Data received:', users);
+                
+                // Clear the loading message.
+                userContainer.innerHTML = '';
+                
+                // Now, update the DOM with the received data.
+                users.forEach(user => {
+                    const userCard = document.createElement('div');
+                    userCard.className = 'bg-white p-6 rounded-lg shadow-md';
+                    userCard.innerHTML = `
+                        <h3 class="text-xl font-bold text-gray-900">${user.name}</h3>
+                        <p class="text-gray-600">${user.email}</p>
+                    `;
+                    userContainer.appendChild(userCard);
+                });
+            })
+            .catch(error => {
+                // Step 3: The .catch() block runs if the Promise is REJECTED.
+                // This happens because our async function 'threw' an error.
+                
+                console.error('An error occurred:', error);
+                
+                // Display a user-friendly error message.
+                userContainer.innerHTML = `<p class="text-red-500 font-semibold">${error.message}</p>`;
+            });
+
+    </script>
+</body>
+</html>

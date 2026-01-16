@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gallery with Modals</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-50">
+
+    <!-- Navbar from previous step can go here -->
+
+    <!-- ============================================ -->
+    <!--           IMAGE GALLERY STARTS HERE          -->
+    <!-- ============================================ -->
+    <section id="gallery" class="py-12">
+        <div class="container mx-auto px-6">
+            <h2 class="text-3xl font-bold text-center text-gray-800 mb-8">Travel Gallery</h2>
+            
+            <!-- Grid container for the gallery -->
+            <!-- Layout: 1 col on mobile, 2 on small screens, 3 on large screens -->
+            <div id="gallery-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
+
+                <!-- Gallery Item 1 -->
+                <div class="gallery-item group cursor-pointer" 
+                     data-location="Paris, France"
+                     data-description="The Eiffel Tower standing tall as a symbol of love and art in the heart of Paris."
+                     data-img-src="https://images.unsplash.com/photo-1502602898657-3e91760c0341?w=800">
+                    <img src="https://images.unsplash.com/photo-1502602898657-3e91760c0341?w=800" alt="Paris" 
+                         class="w-full h-64 object-cover rounded-lg shadow-md transition-transform duration-300 group-hover:scale-105">
+                </div>
+
+                <!-- Gallery Item 2 -->
+                <div class="gallery-item group cursor-pointer"
+                     data-location="Kyoto, Japan"
+                     data-description="A serene temple surrounded by the beautiful colors of autumn in historic Kyoto."
+                     data-img-src="https://images.unsplash.com/photo-1542051841857-5f90071e7989?w=800">
+                    <img src="https://images.unsplash.com/photo-1542051841857-5f90071e7989?w=800" alt="Kyoto"
+                         class="w-full h-64 object-cover rounded-lg shadow-md transition-transform duration-300 group-hover:scale-105">
+                </div>
+
+                <!-- Gallery Item 3 -->
+                <div class="gallery-item group cursor-pointer"
+                     data-location="Santorini, Greece"
+                     data-description="Iconic blue-domed churches overlooking the Aegean Sea in the beautiful island of Santorini."
+                     data-img-src="https://images.unsplash.com/photo-1533105079780-52b9be4ac20c?w=800">
+                    <img src="https://images.unsplash.com/photo-1533105079780-52b9be4ac20c?w=800" alt="Santorini"
+                         class="w-full h-64 object-cover rounded-lg shadow-md transition-transform duration-300 group-hover:scale-105">
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <!-- ============================================ -->
+    <!--              MODAL STARTS HERE               -->
+    <!-- ============================================ -->
+    <!-- Modal Backdrop: The dark, semi-transparent background -->
+    <div id="modal-backdrop" class="fixed inset-0 bg-black bg-opacity-75 flex items-center justify-center hidden">
+        
+        <!-- Modal Panel: The white content box -->
+        <div id="modal-panel" class="bg-white p-6 rounded-lg shadow-xl max-w-lg w-11/12 relative">
+            
+            <!-- Close Button -->
+            <button id="modal-close-btn" class="absolute -top-2 -right-2 bg-white rounded-full p-1">
+                 <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-red-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                 </svg>
+            </button>
+
+            <!-- Modal Content (will be populated by JavaScript) -->
+            <img id="modal-img" src="" alt="Enlarged destination" class="w-full h-80 object-cover rounded-lg mb-4">
+            <h3 id="modal-location" class="text-2xl font-bold text-gray-800"></h3>
+            <p id="modal-description" class="mt-2 text-gray-600"></p>
+
+        </div>
+    </div>
+
+
+    <!-- ============================================ -->
+    <!--         JAVASCRIPT LOGIC STARTS HERE         -->
+    <!-- ============================================ -->
+    <script>
+        // --- Modal Logic ---
+
+        // Get all the necessary elements from the DOM
+        const galleryItems = document.querySelectorAll('.gallery-item');
+        const modalBackdrop = document.getElementById('modal-backdrop');
+        const modalPanel = document.getElementById('modal-panel');
+        const modalCloseBtn = document.getElementById('modal-close-btn');
+        
+        // Get the elements inside the modal that we need to update
+        const modalImage = document.getElementById('modal-img');
+        const modalLocation = document.getElementById('modal-location');
+        const modalDescription = document.getElementById('modal-description');
+
+        // Function to open the modal and populate it with data
+        function openModal(location, description, imgSrc) {
+            // Update the modal's content
+            modalLocation.textContent = location;
+            modalDescription.textContent = description;
+            modalImage.src = imgSrc;
+
+            // Show the modal by removing the 'hidden' class
+            modalBackdrop.classList.remove('hidden');
+        }
+
+        // Function to close the modal
+        function closeModal() {
+            // Hide the modal by adding the 'hidden' class
+            modalBackdrop.classList.add('hidden');
+        }
+        
+        // Add a click event listener to each gallery item
+        galleryItems.forEach(item => {
+            item.addEventListener('click', () => {
+                // When an item is clicked, get its data from the 'data-*' attributes
+                const location = item.dataset.location;
+                const description = item.dataset.description;
+                const imgSrc = item.dataset.imgSrc;
+
+                // Call the openModal function with the retrieved data
+                openModal(location, description, imgSrc);
+            });
+        });
+
+        // Add a click event listener to the close button
+        modalCloseBtn.addEventListener('click', closeModal);
+
+        // Add a click event listener to the modal backdrop (the dark area)
+        // This allows the user to close the modal by clicking outside the panel
+        modalBackdrop.addEventListener('click', (event) => {
+            // We check if the click was on the backdrop itself and not on the panel
+            if (event.target === modalBackdrop) {
+                closeModal();
+            }
+        });
+
+    </script>
+</body>
+</html>

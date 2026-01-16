@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Simple Fetch with async/await</title>
+    <!-- We'll use Tailwind for basic styling -->
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100">
+
+    <div class="container mx-auto p-8">
+        <h1 class="text-3xl font-bold text-center mb-8">Our Users</h1>
+
+        <!-- This is where the user cards will be displayed -->
+        <div id="user-container" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            <!-- A loading message is shown while we wait for the data -->
+            <p class="text-gray-500">Loading...</p>
+        </div>
+    </div>
+
+
+    <!-- ============================================ -->
+    <!--     JAVASCRIPT LOGIC USING async/await       -->
+    <!-- ============================================ -->
+    <script>
+        // Get the container element from the page
+        const userContainer = document.getElementById('user-container');
+
+        // The URL of the API we want to get data from
+        const apiUrl = 'https://jsonplaceholder.typicode.com/users?_limit=6';
+
+        // --- The async/await Function ---
+
+        // Step 1: Declare the function as 'async'
+        async function fetchAndDisplayUsers() {
+
+            // Step 2: Wrap the asynchronous code in a 'try...catch' block for error handling.
+            try {
+                // Step 3: 'await' pauses the function until fetch() completes and returns a response.
+                const response = await fetch(apiUrl);
+
+                // Check if the response was successful, just like before.
+                if (!response.ok) {
+                    // If not, throw an error, which will be caught by the 'catch' block.
+                    throw new Error(`Network response was not ok. Status: ${response.status}`);
+                }
+
+                // Step 4: 'await' pauses again until response.json() completes and returns the data.
+                const users = await response.json();
+
+                // Now that we have the data, we can update the page.
+                // First, clear the "Loading..." message.
+                userContainer.innerHTML = '';
+
+                // Loop through the array of users.
+                users.forEach(user => {
+                    // Create an HTML card for each user.
+                    const userCard = document.createElement('div');
+                    userCard.className = 'bg-white p-6 rounded-lg shadow-md';
+                    userCard.innerHTML = `
+                        <h3 class="text-xl font-bold text-gray-900">${user.name}</h3>
+                        <p class="text-gray-600">${user.email}</p>
+                    `;
+                    
+                    // Add the newly created card to the container.
+                    userContainer.appendChild(userCard);
+                });
+
+            } catch (error) {
+                // Step 5: This 'catch' block will execute if any error occurs in the 'try' block.
+                console.error('There was a problem with the fetch operation:', error);
+                
+                // Display a user-friendly error message on the page.
+                userContainer.innerHTML = `<p class="text-red-500 font-semibold">Failed to load users. Please try again later.</p>`;
+            }
+        }
+
+        // Call the async function to start the process.
+        fetchAndDisplayUsers();
+        
+    </script>
+</body>
+</html>

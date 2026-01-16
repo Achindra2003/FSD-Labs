@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Responsive Navbar</title>
+    
+    <!-- 1. Tailwind CSS - We link to it from a CDN for simplicity -->
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <!-- 2. Font Awesome CSS - Add this line to include Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+</head>
+<body class="bg-gray-100">
+
+    <!-- ============================================ -->
+    <!--          NAVIGATION BAR STARTS HERE          -->
+    <!-- ============================================ -->
+    <header class="bg-white shadow-md">
+        <!-- Main navigation container -->
+        <nav class="container mx-auto px-6 py-4 flex justify-between items-center">
+            
+            <!-- Logo / Brand Name -->
+            <a href="#" class="text-xl font-bold text-gray-800">MyBlog</a>
+
+            <!-- Desktop Menu -->
+            <!-- This menu is HIDDEN on small screens (class="hidden") -->
+            <!-- And becomes a FLEX container on medium screens and up (class="md:flex") -->
+            <div class="hidden md:flex space-x-6">
+                <a href="#home" class="text-gray-600 hover:text-blue-500"><i class="fas fa-home mr-2"></i>Home</a>
+                <a href="#gallery" class="text-gray-600 hover:text-blue-500"><i class="fas fa-images mr-2"></i>Gallery</a>
+                <a href="#map" class="text-gray-600 hover:text-blue-500"><i class="fas fa-map-marker-alt mr-2"></i>Map</a>
+                <a href="#contact" class="text-gray-600 hover:text-blue-500"><i class="fas fa-envelope mr-2"></i>Contact</a>
+            </div>
+
+            <!-- Hamburger Button -->
+            <!-- This button is VISIBLE on small screens by default -->
+            <!-- And HIDDEN on medium screens and up (class="md:hidden") -->
+            <button id="hamburger-btn" class="md:hidden">
+                <!-- A simple hamburger icon using Font Awesome -->
+                <i class="fas fa-bars text-2xl"></i>
+            </button>
+        </nav>
+
+        <!-- Mobile Menu -->
+        <!-- This menu is HIDDEN by default (class="hidden") -->
+        <!-- JavaScript will toggle this 'hidden' class on button click -->
+        <div id="mobile-menu" class="hidden md:hidden">
+            <a href="#home" class="block py-2 px-4 text-sm hover:bg-gray-200"><i class="fas fa-home mr-2"></i>Home</a>
+            <a href="#gallery" class="block py-2 px-4 text-sm hover:bg-gray-200"><i class="fas fa-images mr-2"></i>Gallery</a>
+            <a href="#map" class="block py-2 px-4 text-sm hover:bg-gray-200"><i class="fas fa-map-marker-alt mr-2"></i>Map</a>
+            <a href="#contact" class="block py-2 px-4 text-sm hover:bg-gray-200"><i class="fas fa-envelope mr-2"></i>Contact</a>
+        </div>
+    </header>
+
+
+    <!-- Just some placeholder content to show scrolling -->
+    <main class="container mx-auto p-8">
+        <h1 class="text-4xl font-bold">Welcome to the Blog</h1>
+        <p class="mt-4">Resize your browser window to see the navigation bar change.</p>
+        <div class="h-screen"></div> <!-- Extra space -->
+    </main>
+
+
+    <!-- ============================================ -->
+    <!--         JAVASCRIPT LOGIC STARTS HERE         -->
+    <!-- ============================================ -->
+    <script>
+        // Get the hamburger button and the mobile menu by their IDs
+        const hamburgerBtn = document.getElementById('hamburger-btn');
+        const mobileMenu = document.getElementById('mobile-menu');
+
+        // Add a 'click' event listener to the button
+        hamburgerBtn.addEventListener('click', () => {
+            // When the button is clicked, toggle the 'hidden' class on the menu
+            // .toggle() is a shortcut: it adds the class if it's not there,
+            // and removes it if it is there.
+            mobileMenu.classList.toggle('hidden');
+        });
+    </script>
+
+</body>
+</html>
