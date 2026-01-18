@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Course Registration Form</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        .selected-label {
+            background-color: #f0f9ff; 
+            border-color: #3b82f6;   
+        }
+    </style>
+</head>
+<body class="bg-gray-100 flex items-center justify-center min-h-screen p-4">
+
+    <main class="w-full max-w-lg">
+        <form id="registrationForm" class="bg-white p-8 rounded-xl shadow-md space-y-6">
+            <h1 class="text-2xl font-bold text-gray-800 text-center">Register for a Course</h1>
+            
+            <div>
+                <label for="fullName" class="block mb-2 text-sm font-medium text-gray-700">Full Name</label>
+                <input type="text" id="fullName" class="w-full p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500" required>
+            </div>
+
+            <div>
+                <label for="email" class="block mb-2 text-sm font-medium text-gray-700">Email Address</label>
+                <input type="email" id="email" class="w-full p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500" required>
+            </div>
+            
+            <div>
+                <label for="course" class="block mb-2 text-sm font-medium text-gray-700">Select Course</label>
+                <select id="course" class="w-full p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500" required>
+                    <option value="" disabled selected>-- Please choose an option --</option>
+                    <option value="Introduction to JavaScript">Introduction to JavaScript</option>
+                    <option value="Advanced CSS with Tailwind">Advanced CSS with Tailwind</option>
+                    <option value="Web Accessibility Fundamentals">Web Accessibility Fundamentals</option>
+                </select>
+            </div>
+
+            <div>
+                <label class="block mb-3 text-sm font-medium text-gray-700">Preferred Learning Pace</label>
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                    <label class="flex items-center p-3 border border-gray-300 rounded-md cursor-pointer transition-all duration-200">
+                        <input type="radio" name="pace" value="Self-Paced" class="mr-3 h-4 w-4 text-blue-600 focus:ring-blue-500" required>
+                        <span>Self-Paced</span>
+                    </label>
+                    <label class="flex items-center p-3 border border-gray-300 rounded-md cursor-pointer transition-all duration-200">
+                        <input type="radio" name="pace" value="Instructor-Led" class="mr-3 h-4 w-4 text-blue-600 focus:ring-blue-500">
+                        <span>Instructor-Led</span>
+                    </label>
+                </div>
+            </div>
+
+            <button type="submit" class="w-full bg-blue-600 text-white font-bold py-3 px-4 rounded-md hover:bg-blue-700 transition-colors">Submit Registration</button>
+        </form>
+
+        <div id="resultsContainer" class="hidden mt-8 bg-white p-8 rounded-xl shadow-md border border-gray-200">
+            <h2 class="text-2xl font-bold text-gray-800 mb-4 border-b pb-2">Form Submission Details</h2>
+            <div id="resultsContent" class="space-y-2 text-gray-700">
+                </div>
+        </div>
+    </main>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const form = document.querySelector('#registrationForm');
+            const resultsContainer = document.querySelector('#resultsContainer');
+            const resultsContent = document.querySelector('#resultsContent');
+            const paceOptions = document.querySelectorAll('input[name="pace"]');
+
+            paceOptions.forEach(option => {
+                option.addEventListener('change', function () {
+                    paceOptions.forEach(opt => {
+                        opt.closest('label').classList.remove('selected-label');
+                    });
+
+                    if (this.checked) {
+                        this.closest('label').classList.add('selected-label');
+                    }
+                });
+            });
+
+            form.addEventListener('submit', function (event) {
+
+                event.preventDefault();
+
+                const fullName = document.querySelector('#fullName').value;
+                const email = document.querySelector('#email').value;
+                const course = document.querySelector('#course').value;
+                
+                const selectedPaceInput = document.querySelector('input[name="pace"]:checked');
+                const pace = selectedPaceInput ? selectedPaceInput.value : 'Not selected';
+
+                resultsContent.innerHTML = `
+                    <p><strong>Full Name:</strong> ${fullName}</p>
+                    <p><strong>Email:</strong> ${email}</p>
+                    <p><strong>Course:</strong> ${course}</p>
+                    <p><strong>Learning Pace:</strong> ${pace}</p>
+                `;
+
+                resultsContainer.classList.remove('hidden');
+            });
+        });
+    </script>
+
+</body>
+</html>
