@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student Feedback System</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-slate-100 font-sans">
+
+    <div class="container mx-auto max-w-2xl p-4 sm:p-6 lg:p-8">
+        
+        <div id="welcomeMessage" class="hidden mb-6 bg-blue-100 border-l-4 border-blue-500 text-blue-700 p-4 rounded-md shadow" role="alert">
+            <p class="font-bold">Welcome Back!</p>
+            <p>Glad to see you again. Feel free to submit more feedback.</p>
+        </div>
+
+        <div class="bg-white rounded-lg shadow-lg p-6 mb-8">
+            <h1 class="text-2xl font-bold text-gray-800 mb-6 text-center">Guest Lecture Feedback</h1>
+            
+            <form id="feedbackForm" class="space-y-5">
+                <div>
+                    <label for="fullName" class="block text-sm font-medium text-gray-600">Full Name</label>
+                    <input type="text" id="fullName" name="fullName" class="mt-1 block w-full px-3 py-2 bg-white border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500" required>
+                </div>
+
+                <div>
+                    <label for="email" class="block text-sm font-medium text-gray-600">Email</label>
+                    <input type="email" id="email" name="email" class="mt-1 block w-full px-3 py-2 bg-white border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500" required>
+                </div>
+
+                <div>
+                    <label for="department" class="block text-sm font-medium text-gray-600">Department</label>
+                    <select id="department" name="department" class="mt-1 block w-full px-3 py-2 bg-white border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500">
+                        <option>Computer Science</option>
+                        <option>Electrical Engineering</option>
+                        <option>Mechanical Engineering</option>
+                        <option>Civil Engineering</option>
+                    </select>
+                </div>
+
+                <fieldset>
+                    <legend class="text-sm font-medium text-gray-600">Overall Rating</legend>
+                    <div id="ratingContainer" class="mt-2 flex items-center space-x-4">
+                    </div>
+                </fieldset>
+
+                <div>
+                    <label for="comments" class="block text-sm font-medium text-gray-600">Additional Comments</label>
+                    <textarea id="comments" name="comments" rows="4" class="mt-1 block w-full px-3 py-2 bg-white border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500" maxlength="500"></textarea>
+                    <p id="charCount" class="text-xs text-right text-gray-500 mt-1">0 / 500</p>
+                </div>
+                
+                <button type="submit" class="w-full bg-indigo-600 text-white font-bold py-2 px-4 rounded-md hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition-colors">
+                    Submit Feedback
+                </button>
+            </form>
+        </div>
+
+        <div id="resultsContainer">
+            <div class="flex justify-between items-center mb-4">
+                 <h2 class="text-xl font-bold text-gray-700">Submitted Feedback</h2>
+                 <button id="clearBtn" class="bg-red-500 text-white font-semibold text-sm py-2 px-3 rounded-md hover:bg-red-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 transition-colors">
+                    Clear All
+                </button>
+            </div>
+            <div id="feedbackContainer" class="space-y-4">
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const feedbackForm = document.getElementById('feedbackForm');
+            const commentsInput = document.getElementById('comments');
+            const charCount = document.getElementById('charCount');
+            const feedbackContainer = document.getElementById('feedbackContainer');
+            const clearBtn = document.getElementById('clearBtn');
+            const welcomeMessage = document.getElementById('welcomeMessage');
+            const ratingContainer = document.getElementById('ratingContainer');
+
+            const ratingHTML = [1, 2, 3, 4, 5].map(rating => `
+                <label for="rating-${rating}" class="flex items-center space-x-1 cursor-pointer">
+                    <input type="radio" id="rating-${rating}" name="rating" value="${rating}" class="h-4 w-4 text-indigo-600 border-gray-300 focus:ring-indigo-500" required>
+                    <span class="text-gray-700">${rating}</span>
+                </label>
+            `).join('');
+            ratingContainer.innerHTML = ratingHTML;
+
+            if (sessionStorage.getItem('hasVisited')) {
+                welcomeMessage.classList.remove('hidden');
+            } else {
+                sessionStorage.setItem('hasVisited', 'true');
+            }
+            
+            const getFeedbacks = () => JSON.parse(localStorage.getItem('feedbacks')) || [];
+            const saveFeedbacks = (feedbacks) => localStorage.setItem('feedbacks', JSON.stringify(feedbacks));
+
+            const createFeedbackCard = (feedback) => {
+                const card = document.createElement('div');
+                card.className = "bg-white p-4 rounded-lg shadow-md border-l-4 border-indigo-500";
+                
+                let stars = '';
+                for (let i = 0; i < 5; i++) {
+                    stars += `<span class="text-2xl ${i < feedback.rating ? 'text-yellow-400' : 'text-gray-300'}">★</span>`;
+                }
+
+                card.innerHTML = `
+                    <div class="flex justify-between items-start">
+                        <div>
+                            <p class="font-bold text-gray-800">${feedback.name}</p>
+                            <p class="text-sm text-gray-500">${feedback.department}</p>
+                        </div>
+                        <div class="flex">${stars}</div>
+                    </div>
+                    <p class="text-gray-700 mt-3 break-words">${feedback.comments || 'No comments provided.'}</p>
+                `;
+                return card;
+            };
+
+            const displayFeedbacks = () => {
+                feedbackContainer.innerHTML = '';
+                const feedbacks = getFeedbacks();
+                if (feedbacks.length === 0) {
+                    feedbackContainer.innerHTML = '<p class="text-center text-gray-500">No feedback submitted yet.</p>';
+                    clearBtn.classList.add('hidden');
+                } else {
+                    feedbacks.forEach(feedback => {
+                        const card = createFeedbackCard(feedback);
+                        feedbackContainer.appendChild(card);
+                    });
+                    clearBtn.classList.remove('hidden');
+                }
+            };
+            
+            feedbackForm.addEventListener('submit', (e) => {
+                e.preventDefault();
+
+                const selectedRating = document.querySelector('input[name="rating"]:checked');
+                if (!selectedRating) {
+                    alert('Please select a rating.');
+                    return;
+                }
+
+                const newFeedback = {
+                    id: Date.now(),
+                    name: document.getElementById('fullName').value,
+                    email: document.getElementById('email').value,
+                    department: document.getElementById('department').value,
+                    rating: selectedRating.value,
+                    comments: commentsInput.value
+                };
+
+                const feedbacks = getFeedbacks();
+                feedbacks.push(newFeedback);
+                saveFeedbacks(feedbacks);
+
+                displayFeedbacks();
+                feedbackForm.reset();
+                charCount.textContent = '0 / 500';
+                
+                document.getElementById('resultsContainer').scrollIntoView({ behavior: 'smooth' });
+            });
+
+            commentsInput.addEventListener('input', () => {
+                const count = commentsInput.value.length;
+                charCount.textContent = `${count} / 500`;
+            });
+
+            clearBtn.addEventListener('click', () => {
+                if (confirm('Are you sure you want to delete all feedback? This action cannot be undone.')) {
+                    localStorage.removeItem('feedbacks');
+                    displayFeedbacks();
+                }
+            });
+
+            displayFeedbacks();
+        });
+    </script>
+</body>
+</html>
