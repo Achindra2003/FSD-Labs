@@ -1,0 +1,12 @@
+{
+  "name": "intellilearn-api",
+  "version": "1.0.0",
+  "description": "A REST API for IntelliLearn courses.",
+  "main": "server.js",
+  "type": "module",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "author": "",
+  "license": "ISC"
+}
